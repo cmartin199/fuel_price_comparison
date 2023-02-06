@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 import { json } from 'stream/consumers';
 import './App.css';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import { TextField, Button, Box } from '@mui/material';
+import { StationTile } from './components/stationTile';
 
 function App() {
 
@@ -31,7 +32,7 @@ function App() {
   return (
     <div className="App">
       <h1>this is a fuel comparison App</h1>
-      <TextField label="Postcode" variant="outlined" onChange={(e) => (setPostcode(e.target.value))} />
+      <TextField label="Postcode" variant="outlined" onChange={(e: { target: { value: SetStateAction<string>; }; }) => (setPostcode(e.target.value))} />
       <Button variant="contained" onClick={LoadAPI}>Submit</Button>
       <Box>
         <Button variant="contained" onClick={() => { setFuelType('Unleaded') }}>Unleaded Petrol</Button>
@@ -43,10 +44,16 @@ function App() {
         data.map((item, key) => {
           return (
             < div key={key} >
-              {item}
+              <StationTile
+                distanceFromSearchPostcode = {item['DistanceFromSearchPostcode']}
+                fuelPriceList  = {item['FuelpriceList']}
+                name  = {item['Name']}
+                postcode  = {item['Postcode']}
+                street  = {item['Street']}
+              />
             </div>
           );
-        })
+          })
       }
     </div >
   );
