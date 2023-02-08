@@ -10,7 +10,7 @@ function App() {
 
   // Set Variables
   const ApiKey = `175018f0-9fa4-4cf9-ae19-a24a53466e38`;
-  const [postcode, setPostcode] = useState('BS12AN');
+  const [postcode, setPostcode] = useState('GIR 0AA');
   const [fuelType, setFuelType] = useState('Unleaded');
   const [data, setData] = useState([]);
   const [apiCalled, setApiCalled] = useState(false);
@@ -19,10 +19,16 @@ function App() {
   async function LoadAPI() {
     const URL = `https://uk1.ukvehicledata.co.uk/api/datapackage/FuelPriceData?v=2&api_nullitems=1&auth_apikey=${ApiKey}&key_POSTCODE=${postcode}`;
     const responseJSON = await fetch(URL).then(response => response.json());
-    setData(responseJSON.Response.DataItems.FuelStationDetails.FuelStationList);
-
+    console.log(responseJSON);
+    try {
+      setData(responseJSON.Response.DataItems.FuelStationDetails.FuelStationList);
+    }
+    catch (e) {
+      setData(responseJSON.Response.StatusMessage);
+      console.log(data);
+      //TODO: get the no data message to display
+    }
     setApiCalled(true);
-    console.log(data);
   }
 
   useEffect(() => {
@@ -40,20 +46,21 @@ function App() {
         <Button variant="contained" onClick={() => { setFuelType('Diesel') }}>Diesel</Button>
 
       </Box>
-      {apiCalled &&
+      {(apiCalled) &&
         data.map((item, key) => {
+          //console.log(item['FuelPriceList'])
           return (
             < div key={key} >
               <StationTile
-                distanceFromSearchPostcode = {item['DistanceFromSearchPostcode']}
-                fuelPriceList  = {item['FuelpriceList']}
-                name  = {item['Name']}
-                postcode  = {item['Postcode']}
-                street  = {item['Street']}
+                distanceFromSearchPostcode={item['DistanceFromSearchPostcode']}
+                fuelPriceList={item['FuelPriceList']}
+                name={item['Name']}
+                postcode={item['Postcode']}
+                street={item['Street']}
               />
             </div>
           );
-          })
+        })
       }
     </div >
   );

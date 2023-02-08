@@ -1,8 +1,8 @@
-import { Box, Typography } from '@mui/material';
+import { Grid, Box, Typography } from '@mui/material';
 
 interface Station {
     distanceFromSearchPostcode: number;
-    fuelPriceList: Array<{}>;
+    fuelPriceList: Array<any>;
     name: string;
     postcode: string;
     street: string
@@ -14,7 +14,6 @@ const commonStyles = {
     borderColor: 'black',
     border: 1,
     width: '50rem',
-    height: '5rem',
 };
 
 export const StationTile = ({
@@ -25,8 +24,33 @@ export const StationTile = ({
     street
 }: Station) => {
     return (
-        <Box sx={{ ...commonStyles, borderRadius: '16px' }} >
-            <Typography>{name}</Typography>
-        </Box>
+        <Grid item container sx={{ ...commonStyles, borderRadius: '16px' }} md={12} spacing={0} padding={3} >
+            <Grid item sm={9} spacing={1}>
+                <Typography>{name}, {street}</Typography>
+            </Grid>
+            <Grid item sm={3} spacing={1}>
+                <Typography>{Math.round(distanceFromSearchPostcode)} miles away</Typography>
+            </Grid>
+            <Grid item sm={12} spacing={1}>
+                <Typography>{postcode}</Typography>
+            </Grid>
+            {
+                fuelPriceList.map((item, key) => {
+
+                    return (
+                        <Grid key={key} item container sm={12}>
+                            <Grid item sm={4}>
+                                <Typography>{item.FuelType}</Typography>
+                            </Grid>
+                            <Grid item sm={4}>
+                                <Typography>£{item.LatestRecordedPrice.InGbp}</Typography>
+                            </Grid>
+                        </Grid>
+
+
+                    );
+                })
+            }
+        </Grid>
     );
 }
