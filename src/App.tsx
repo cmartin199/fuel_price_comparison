@@ -1,7 +1,6 @@
 import { useState, useEffect, SetStateAction } from 'react';
-import { json } from 'stream/consumers';
 import './App.css';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Typography } from '@mui/material';
 import { StationTile } from './components/stationTile';
 
 function App() {
@@ -10,10 +9,13 @@ function App() {
 
   // Set Variables
   const ApiKey = `175018f0-9fa4-4cf9-ae19-a24a53466e38`;
+  // to test with no responses use this: GIR 0AA
+  // to test when you want the data to be returned: BS12AN
   const [postcode, setPostcode] = useState('GIR 0AA');
-  const [fuelType, setFuelType] = useState('Unleaded');
+  //const [fuelType, setFuelType] = useState('Unleaded');
   const [data, setData] = useState([]);
   const [apiCalled, setApiCalled] = useState(false);
+  const [isDataReturned, setIsDataReturned] = useState(false);
 
   // Create GET Request (Include payload & headers)
   async function LoadAPI() {
@@ -22,6 +24,7 @@ function App() {
     console.log(responseJSON);
     try {
       setData(responseJSON.Response.DataItems.FuelStationDetails.FuelStationList);
+      setIsDataReturned(true);
     }
     catch (e) {
       setData(responseJSON.Response.StatusMessage);
@@ -31,24 +34,15 @@ function App() {
     setApiCalled(true);
   }
 
-  useEffect(() => {
-    LoadAPI();
-  }, []);
 
   return (
     <div className="App">
       <h1>this is a fuel comparison App</h1>
       <TextField label="Postcode" variant="outlined" onChange={(e: { target: { value: SetStateAction<string>; }; }) => (setPostcode(e.target.value))} />
       <Button variant="contained" onClick={LoadAPI}>Submit</Button>
-      <Box>
-        <Button variant="contained" onClick={() => { setFuelType('Unleaded') }}>Unleaded Petrol</Button>
-        <Button variant="contained" onClick={() => { setFuelType('Super Unleaded') }}>Premium Unleaded</Button>
-        <Button variant="contained" onClick={() => { setFuelType('Diesel') }}>Diesel</Button>
-
-      </Box>
-      {(apiCalled) &&
-        data.map((item, key) => {
-          //console.log(item['FuelPriceList'])
+      {apiCalled && 
+      isDataReturned 
+      ? data.map((item, key) => {
           return (
             < div key={key} >
               <StationTile
@@ -61,6 +55,8 @@ function App() {
             </div>
           );
         })
+
+      : <Typography>Sorry, no locations found within five miles of that address</Typography>
       }
     </div >
   );
