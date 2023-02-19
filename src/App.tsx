@@ -8,7 +8,7 @@ function App() {
   //import requests
 
   // Set Variables
-  const ApiKey = `175018f0-9fa4-4cf9-ae19-a24a53466e38`;
+  const ApiKey = process.env;
   // to test with no responses use this: GIR 0AA
   // to test when you want the data to be returned: BS12AN
   const [postcode, setPostcode] = useState('GIR 0AA');
@@ -19,6 +19,7 @@ function App() {
 
   // Create GET Request (Include payload & headers)
   async function LoadAPI() {
+    console.log(ApiKey);
     const URL = `https://uk1.ukvehicledata.co.uk/api/datapackage/FuelPriceData?v=2&api_nullitems=1&auth_apikey=${ApiKey}&key_POSTCODE=${postcode}`;
     const responseJSON = await fetch(URL).then(response => response.json());
     console.log(responseJSON);
