@@ -1,4 +1,4 @@
-import { useState, useEffect, SetStateAction } from 'react';
+import { useState, SetStateAction } from 'react';
 import './App.css';
 import { TextField, Button, Typography } from '@mui/material';
 import { StationTile } from './components/stationTile';

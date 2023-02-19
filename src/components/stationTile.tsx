@@ -1,4 +1,4 @@
-import { Grid, Box, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 interface Station {
     distanceFromSearchPostcode: number;
